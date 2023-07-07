@@ -26,11 +26,11 @@ class ScaledDotProductAttention(Layer):
             res = -np.inf
 
         # 3. softmax
-        # shape(resMat) doesn't change
+        # shape(res) doesn't change
         res = softmax(res)
 
         # 4. multiply by V
-        # shape(resMat) = (64, 5, 64) = (batch_size, input_seq_length, d_v)
+        # shape(res) = (64, 5, 64) = (batch_size, input_seq_length, d_v)
         res = matmul(res, values)
 
         return res
