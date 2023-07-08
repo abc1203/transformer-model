@@ -1,5 +1,6 @@
 from tensorflow.keras.layers import Layer
-from tensorflow import matmul, sqrt, softmax, cast, float32
+from tensorflow import matmul, sqrt, cast, float32
+from keras.backend import softmax
 import numpy as np
 
 
