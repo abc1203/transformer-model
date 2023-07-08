@@ -1,0 +1,7 @@
+July 3 - finish ScaledDotProductAttention
+July 6 - finish MultiheadAttention
+
+
+Plans:
+July 8 - finish Transformer Encoder
+July 9 - finish Transformer Decoder
