@@ -1,5 +1,6 @@
 July 3 - finish ScaledDotProductAttention
 July 6 - finish MultiheadAttention
+July 7 - set up tensorflow & required packages
 
 
 Plans:
