@@ -1,6 +1,6 @@
 from tensorflow.keras.layers import Layer, Dense
 from tensorflow import shape, reshape, transpose
-from scaledDotProductAttention import ScaledDotProductAttention
+from ScaledDotProductAttention import ScaledDotProductAttention
 
 
 
