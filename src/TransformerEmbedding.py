@@ -31,8 +31,7 @@ class TransformerEmbedding(Layer):
     
 
     def call(self, inputs):
-        token_embedding = self.token_embedding(inputs)
-        res = token_embedding + self.positional_encoding
+        res = self.token_embedding(inputs) + self.positional_encoding
 
         return res
 
