@@ -6,3 +6,14 @@ July 7 - set up tensorflow & required packages
 Plans:
 July 8 - finish Transformer Encoder
 July 9 - finish Transformer Decoder
+
+Implementing Input & Output Embedding + Positional Encoding:
+ 1. convert sentences into int vectors (ex. ["I am bad"] => [2 0 1])]
+ 2. using embedding, convert the int vectors into vectors of dimension d_model
+ 3. perform positional encoding 
+
+Questions:
+ 1. how does summing work ("The positional encodings have the same dimension dmodel
+as the embeddings, so that the two can be summed")? The implementation tutorial summed up the embeddings for words & indices
+ 2. "In the embedding layers, we multiply those weights by √dmodel" where does that happen?
+ 
