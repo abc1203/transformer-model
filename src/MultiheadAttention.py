@@ -41,7 +41,7 @@ class MultiheadAttention(Layer):
         self.attention = ScaledDotProductAttention()
     
 
-    def call(self, queries, keys, values, masking=False):
+    def call(self, queries, keys, values, is_masking=False):
         h, d_k, d_v, d_model = self.h, self.d_k, self.d_v, self.d_model
         batch_size, q_len, k_len, v_len = shape(queries)[0], shape(queries)[1], shape(keys)[1], shape(values)[1]
 
@@ -61,7 +61,7 @@ class MultiheadAttention(Layer):
         v = transpose(v, perm=[0, 2, 1, 3])
 
         # apply dot product attention
-        o = self.attention(q, k, v, d_k, masking)
+        o = self.attention(q, k, v, d_k, is_masking)
 
         # reshape the output tensor back to original
         o = transpose(o, perm=[0, 2, 1, 3])

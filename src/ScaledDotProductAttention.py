@@ -14,7 +14,7 @@ class ScaledDotProductAttention(Layer):
     def __init__(self, **kwargs):
         super(ScaledDotProductAttention, self).__init__(**kwargs)
 
-    def call(self, queries, keys, values, d_k, masking=False):
+    def call(self, queries, keys, values, d_k, is_masking=False):
         # 1. Matmul Q & K^T
         # res has shape(64, 5, 5)
         res = matmul(queries, keys, transpose_b=True)
@@ -23,8 +23,9 @@ class ScaledDotProductAttention(Layer):
         res /= sqrt(cast(d_k, float32))
 
         # 2a. optional: set all values inside softmax to -inf when deemed fit
-        if masking:
-            res = -np.inf
+        if is_masking:
+            res = -np.inf * res
+            print("The values are masked out.")
 
         # 3. softmax
         # shape(res) doesn't change
@@ -35,6 +36,4 @@ class ScaledDotProductAttention(Layer):
         res = matmul(res, values)
 
         return res
-
-
 
