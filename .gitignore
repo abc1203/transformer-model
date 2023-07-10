@@ -1,3 +1,6 @@
 .vscode/settings.json
 src/__pycache__/ScaledDotProductAttention.cpython-39.pyc
 progress_log.txt
+src/__pycache__/LayerNorm.cpython-39.pyc
+src/__pycache__/MultiheadAttention.cpython-39.pyc
+src/__pycache__/PositionwiseFeedForwardNetwork.cpython-39.pyc
