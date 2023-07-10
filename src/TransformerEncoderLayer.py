@@ -1,5 +1,7 @@
 from tensorflow.keras.layers import Layer, Dropout
-import MultiheadAttention, PositionwiseFeedForwardNetwork, LayerNorm
+from MultiheadAttention import MultiheadAttention
+from PositionwiseFeedForwardNetwork import PositionwiseFeedForwardNetwork
+from LayerNorm import LayerNorm
 
 
 class TransformerEncoderLayer(Layer):

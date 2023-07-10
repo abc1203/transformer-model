@@ -38,6 +38,7 @@ class MultiheadAttention(Layer):
         self.W_queries = Dense(d_k)
         self.W_keys = Dense(d_k)
         self.W_values = Dense(d_v)
+        self.W_output = Dense(d_model)
         self.attention = ScaledDotProductAttention()
     
 
@@ -45,6 +46,7 @@ class MultiheadAttention(Layer):
         h, d_k, d_v, d_model = self.h, self.d_k, self.d_v, self.d_model
         batch_size, q_len, k_len, v_len = shape(queries)[0], shape(queries)[1], shape(keys)[1], shape(values)[1]
 
+        # linear project the queries, keys, and values
         q = self.W_queries(queries)
         k = self.W_keys(keys)
         v = self.W_values(values)
@@ -66,6 +68,9 @@ class MultiheadAttention(Layer):
         # reshape the output tensor back to original
         o = transpose(o, perm=[0, 2, 1, 3])
         output = reshape(o, shape=[batch_size, shape(o)[1], d_v])
+
+        # linear project the output to have dimension d_model
+        output = self.W_output(output)
 
         return output
 
