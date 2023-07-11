@@ -12,3 +12,7 @@ Implementing Input & Output Embedding + Positional Encoding:
  2. using embedding, convert the int vectors into vectors of dimension d_model
  3. perform positional encoding - this part only needs the dimensions
  4. sum the embeddings & positional encoding
+
+
+To Do:
+ - decide whether is_masking should stay in EncoderLayer & Encoder

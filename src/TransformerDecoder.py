@@ -1,23 +1,23 @@
 from tensorflow.keras.layers import Layer, Dropout
 from TransformerEmbedding import TransformerEmbedding
-from TransformerEncoderLayer import TransformerEncoderLayer
+from TransformerDecoderLayer import TransformerDecoderLayer
 
 
-class TransformerEncoder(Layer):
+class TransformerDecoder(Layer):
     """
-    the Transformer Encoder implemented
-    the encoder consists of 3 main components:
-        1. the TransformerEmbedding, which performs input embedding & positional encoding on the input (which is an int vector)
+    the Transformer Decoder implemented
+    the decoder consists of 3 main components:
+        1. the TransformerEmbedding, which performs input embedding & positional encoding on the output (which is an int vector)
         2. Dropout layer to the output of the TransformerEmbedding
-        3. N = 6 (default) TransformerEncoderLayers, whose structure is specified in TransformerEncoderLayer.py
+        3. N = 6 (default) TransformerDecoderLayers, whose structure is specified in TransformerDecoderLayer.py
     the resulting output is a tensor with shape (batch_size, max_seq_len, d_model)
     """
 
     def __init__(self, vocab_size, max_seq_len, N = 6,
             h = 8, d_k = 64, d_v = 64, d_model = 512, d_ff = 2048, dropout_rate = 0.1, **kwargs):
-        super(TransformerEncoder, self).__init__(**kwargs)
+        super(TransformerDecoder, self).__init__(**kwargs)
         self.transformer_embedding = TransformerEmbedding(vocab_size, max_seq_len, d_model)
-        self.transformer_encoder_layers = [TransformerEncoderLayer(h, d_k, d_v, d_model, d_ff, dropout_rate) for _ in range(N)]
+        self.transformer_decoder_layers = [TransformerDecoderLayer(h, d_k, d_v, d_model, d_ff, dropout_rate) for _ in range(N)]
         self.dropout = Dropout(dropout_rate)
     
 
@@ -29,9 +29,8 @@ class TransformerEncoder(Layer):
         res = self.dropout(res, is_training)
 
         # put the resulting output into the encoder layers (N = 6 by default)
-        for i, transformer_encoder_layer in enumerate(self.transformer_encoder_layers):
-            res = transformer_encoder_layer(res, is_masking, is_training)
+        for i, transformer_decoder_layer in enumerate(self.transformer_decoder_layers):
+            res = transformer_decoder_layer(res, is_masking, is_training)
         
         return res
-
 

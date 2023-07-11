@@ -11,11 +11,11 @@ class TransformerEncoderLayer(Layer):
     the layer contains the following components:
         1a. multihead attention, where the input is the queries, keys, and values
         1b. a residual dropout (with rate = 0.1) is applied to the output of the attention mechanism
-        1c. apply LayerNorm(x + Sublayer(x)), where x = the input and Sublayer = the output from 1b
+        1c. apply LayerNorm(x + Sublayer(x)), where x = the input and Sublayer(x) = the output from 1b
         
         2a. feed forward network as implemented in PositionwiseFeedForwardNetwork, which takes the output of 1c as input
         2b. a residual dropout (with rate = 0.1) is applied to the output of the FFN
-        2c. apply LayerNorm(x + Sublayer(x)), where x = the output from 1c and Sublayer = the output from 2b
+        2c. apply LayerNorm(x + Sublayer(x)), where x = the output from 1c and Sublayer(x) = the output from 2b
     """
     
     
