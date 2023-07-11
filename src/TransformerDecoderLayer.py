@@ -18,9 +18,9 @@ class TransformerDecoderLayer(Layer):
         2b. a residual dropout (with rate = 0.1) identical to 1b
         2c. apply LayerNorm(x + Sublayer(x)), where x = output from 1c and Sublayer(x) = output from 2b
         
-        2a. feed forward network as implemented in PositionwiseFeedForwardNetwork, which takes in the output from 2c
-        2b. a residual dropout (with rate = 0.1) identical to 1b
-        2c. apply LayerNorm(x + Sublayer(x)), where x = the output from 2c and Sublayer(x) = the output from 3b
+        3a. feed forward network as implemented in PositionwiseFeedForwardNetwork, which takes in the output from 2c
+        3b. a residual dropout (with rate = 0.1) identical to 1b
+        3c. apply LayerNorm(x + Sublayer(x)), where x = the output from 2c and Sublayer(x) = the output from 3b
     """
 
     def __init__(self, h = 8, d_k = 64, d_v = 64, d_model = 512, d_ff = 2048, dropout_rate = 0.1, **kwargs):
