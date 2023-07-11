@@ -1,11 +1,12 @@
 July 3 - finish ScaledDotProductAttention
 July 6 - finish MultiheadAttention
 July 7 - set up tensorflow & required packages
+July 9 - finish Transformer Embedding, Transformer Encoder
+July 10 - finish Transformer Decoder (with minor problems on the masked MultiheadAttention)
 
 
 Plans:
-July 8 - finish Transformer Encoder
-July 9 - finish Transformer Decoder
+July 11 - figure out & implement masking; decide whether the is_masking should stay on Encoder/Decoder
 
 Implementing Input & Output Embedding + Positional Encoding:
  1. convert sentences into int vectors (ex. ["I am bad"] => [2 0 1])]
@@ -14,5 +15,4 @@ Implementing Input & Output Embedding + Positional Encoding:
  4. sum the embeddings & positional encoding
 
 
-To Do:
- - decide whether is_masking should stay in EncoderLayer & Encoder
+
