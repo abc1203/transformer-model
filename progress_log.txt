@@ -15,4 +15,16 @@ Implementing Input & Output Embedding + Positional Encoding:
  4. sum the embeddings & positional encoding
 
 
+Masking:
+ - Padding Mask
+     - certain input sequences will first be zero-padded to a specific length, before feeding into the model => Zero Padding
+     - purpose of padding mask is to ensure that the added zero values will not be processed by the model
+     - padding mask marks the zero values by 1 (ex. [1, 2, 3, 4, 0, 0. 0] => [0, 0, 0, 0, 1, 1, 1])
+ - Lookahead Mask
+     - masking used in the 1st decoder sublayer
+     - purpose of lookahead mask is to make sure that the succeeding words will not be considered in the model
+     - lookahead mask marks the succeeding words by 1 
+ - in the sample implementation, both the padding & lookahead mask are used in the masked MultiheadAttention
+
+
 
