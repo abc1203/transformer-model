@@ -35,9 +35,9 @@ class TransformerDecoderLayer(Layer):
         self.dropout3 = Dropout(dropout_rate)
         self.add_norm3 = LayerNorm()
     
-    def call(self, embedded_output, encoder_output, is_masking = False, is_training = False):
+    def call(self, embedded_output, encoder_output, is_training = False):
         # 1a. go through masked multihead attention
-        res1 = self.multihead_attention1(embedded_output, embedded_output, embedded_output, is_masking=is_masking)
+        res1 = self.multihead_attention1(embedded_output, embedded_output, embedded_output, is_masking=True)
 
         # 1b. apply dropout
         res1 = self.dropout1(res1, is_training)
@@ -46,7 +46,7 @@ class TransformerDecoderLayer(Layer):
         res1 = self.add_norm1(embedded_output, res1)
 
         # 2a. go though 2nd nonmasked multihead attention
-        res2 = self.multihead_attention2(res1, encoder_output, encoder_output, is_masking)
+        res2 = self.multihead_attention2(res1, encoder_output, encoder_output, is_masking=False)
 
         # 2b. apply dropout
         res2 = self.dropout2(res2, is_training)

@@ -7,7 +7,7 @@ class TransformerDecoder(Layer):
     """
     the Transformer Decoder implemented
     the decoder consists of 3 main components:
-        1. the TransformerEmbedding, which performs input embedding & positional encoding on the output (which is an int vector)
+        1. the TransformerEmbedding, which performs output embedding & positional encoding on the output (which is an int vector)
         2. Dropout layer to the output of the TransformerEmbedding
         3. N = 6 (default) TransformerDecoderLayers, whose structure is specified in TransformerDecoderLayer.py
     the resulting output is a tensor with shape (batch_size, max_seq_len, d_model)
@@ -21,16 +21,16 @@ class TransformerDecoder(Layer):
         self.dropout = Dropout(dropout_rate)
     
 
-    def call(self, inputs, is_masking = False, is_training = False):
-        # perform input embedding & positional encoding onto the inputs
-        res = self.transformer_embedding(inputs)
+    def call(self, outputs, encoder_output, is_training = False):
+        # perform output embedding & positional encoding onto the outputs
+        res = self.transformer_embedding(outputs)
 
         # apply dropout to the sum of the embeddings and the positional encodings
         res = self.dropout(res, is_training)
 
         # put the resulting output into the encoder layers (N = 6 by default)
         for i, transformer_decoder_layer in enumerate(self.transformer_decoder_layers):
-            res = transformer_decoder_layer(res, is_masking, is_training)
+            res = transformer_decoder_layer(res, encoder_output, is_training)
         
         return res
 

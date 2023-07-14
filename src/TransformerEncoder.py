@@ -21,7 +21,7 @@ class TransformerEncoder(Layer):
         self.dropout = Dropout(dropout_rate)
     
 
-    def call(self, inputs, is_masking = False, is_training = False):
+    def call(self, inputs, is_training = False):
         # perform input embedding & positional encoding onto the inputs
         res = self.transformer_embedding(inputs)
 
@@ -30,7 +30,7 @@ class TransformerEncoder(Layer):
 
         # put the resulting output into the encoder layers (N = 6 by default)
         for i, transformer_encoder_layer in enumerate(self.transformer_encoder_layers):
-            res = transformer_encoder_layer(res, is_masking, is_training)
+            res = transformer_encoder_layer(res, is_training)
         
         return res
 

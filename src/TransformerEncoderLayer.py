@@ -29,9 +29,9 @@ class TransformerEncoderLayer(Layer):
         self.add_norm2 = LayerNorm()
     
 
-    def call(self, embedded_input, is_masking = False, is_training = False):
+    def call(self, embedded_input, is_training = False):
         # 1a. go through multihead attention
-        res1 = self.multihead_attention(embedded_input, embedded_input, embedded_input, is_masking)
+        res1 = self.multihead_attention(embedded_input, embedded_input, embedded_input, is_masking=False)
 
         # 1b. apply dropout to the output of the attention
         res1 = self.dropout1(res1, is_training)
