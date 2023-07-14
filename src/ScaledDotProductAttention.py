@@ -1,5 +1,5 @@
-from tensorflow.keras.layers import Layer
-from tensorflow import matmul, sqrt, cast, float32
+from tensorflow.keras.layers import Layer, Softmax
+from tensorflow import matmul, sqrt, cast, linalg, float32, ones, math, maximum
 from keras.backend import softmax
 import numpy as np
 
@@ -13,25 +13,39 @@ class ScaledDotProductAttention(Layer):
 
     def __init__(self, **kwargs):
         super(ScaledDotProductAttention, self).__init__(**kwargs)
+        self.Softmax = Softmax()
+    
+
+    def get_mask(self, input, is_masking):
+        # apply padding mask
+        mask_mat = math.equal(input, 0)
+        mask_mat = cast(mask_mat, float32)
+        
+        if is_masking:
+            # apply lookahead mask to the existing padding mask
+            max_seq_len = input.shape[2]
+            mask_mat_lookahead = 1 - linalg.band_part(ones((max_seq_len, max_seq_len)), -1, 0)
+            mask_mat = maximum(mask_mat, mask_mat_lookahead)
+
+        return mask_mat
+
 
     def call(self, queries, keys, values, d_k, is_masking=False):
         # 1. Matmul Q & K^T
-        # res has shape(64, 5, 5)
+        # res has shape(64, 8, 5, 5)
         res = matmul(queries, keys, transpose_b=True)
 
         # 2. scaling factor of sqrt(d_k)
         res /= sqrt(cast(d_k, float32))
 
-        # 2a. optional: set all values inside softmax to -inf when deemed fit
-        if is_masking:
-            res = -np.inf * res
-            print("The values are masked out.")
+        # 3. create a mask to be put into the softmax
+        mask_mat = self.get_mask(res, is_masking)
 
-        # 3. softmax
+        # 4. softmax
         # shape(res) doesn't change
-        res = softmax(res)
+        res = self.Softmax(res, mask=mask_mat)
 
-        # 4. multiply by V
+        # 5. multiply by V
         # shape(res) = (64, 5, 64) = (batch_size, input_seq_length, d_v)
         res = matmul(res, values)
 

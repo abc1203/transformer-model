@@ -73,6 +73,4 @@ class MultiheadAttention(Layer):
         output = self.W_output(output)
 
         return output
-
-
-
+        
