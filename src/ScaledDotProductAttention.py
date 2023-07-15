@@ -1,6 +1,5 @@
 from tensorflow.keras.layers import Layer, Softmax
 from tensorflow import matmul, sqrt, cast, linalg, float32, ones, math, maximum
-from keras.backend import softmax
 import numpy as np
 
 
@@ -13,7 +12,7 @@ class ScaledDotProductAttention(Layer):
 
     def __init__(self, **kwargs):
         super(ScaledDotProductAttention, self).__init__(**kwargs)
-        self.Softmax = Softmax()
+        self.softmax = Softmax()
     
 
     def get_mask(self, input, is_masking):
@@ -43,7 +42,7 @@ class ScaledDotProductAttention(Layer):
 
         # 4. softmax
         # shape(res) doesn't change
-        res = self.Softmax(res, mask=mask_mat)
+        res = self.softmax(res, mask=mask_mat)
 
         # 5. multiply by V
         # shape(res) = (64, 5, 64) = (batch_size, input_seq_length, d_v)
