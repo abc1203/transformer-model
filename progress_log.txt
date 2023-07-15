@@ -4,10 +4,9 @@ July 7 - set up tensorflow & required packages
 July 9 - finish Transformer Embedding, Transformer Encoder
 July 10 - finish Transformer Decoder (with minor problems on the masked MultiheadAttention)'
 July 13 - masking done
-
+July 14 - Transformer model done
 
 Plans:
-July 14 - finish Transformer model
 July 16 - finish training & evaluating code
 July 18 - finish documentation
 
