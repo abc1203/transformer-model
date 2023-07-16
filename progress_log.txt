@@ -30,4 +30,9 @@ Masking:
  - in the sample implementation, both the padding & lookahead mask are used in the masked MultiheadAttention
 
 
+Training the model:
+ 1. implement lrate to be used within the Adam Optimizer
+ 2. preprocess the WMT dataset
+ 3. implement accurcy & BLEU functions or find them in keras/tf
+ 4. implement the function that trains the model
 
