@@ -1,18 +1,8 @@
-import datasets
-from datasets import inspect_dataset, load_dataset_builder
 
-inspect_dataset("wmt14", "path/to/scripts")
-builder = load_dataset_builder(
-    "path/to/scripts/wmt_utils.py",
-    language_pair=("fr", "de"),
-    subsets={
-        datasets.Split.TRAIN: ["commoncrawl_frde"],
-        datasets.Split.VALIDATION: ["euelections_dev2019"],
-    },
-)
+import tensorflow_datasets as tfds
+import os
 
-# Standard version
-builder.download_and_prepare()
-ds = builder.as_dataset()
+data_dir = os.getcwd() + '\datasets'
+print(data_dir)
 
-print(ds)
+ds = tfds.load('huggingface:wmt14/de-en', split='train', data_dir=data_dir, download=False)

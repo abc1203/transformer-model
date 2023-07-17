@@ -1,0 +1,16 @@
+{
+    "pythonClassName": "tensorflow_datasets.core.features.features_dict.FeaturesDict",
+    "featuresDict": {
+        "features": {
+            "translation": {
+                "pythonClassName": "tensorflow_datasets.core.features.translation_feature.Translation",
+                "translation": {
+                    "languages": [
+                        "de",
+                        "en"
+                    ]
+                }
+            }
+        }
+    }
+}
