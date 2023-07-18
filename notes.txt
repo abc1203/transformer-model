@@ -1,16 +1,3 @@
-July 3 - finish ScaledDotProductAttention
-July 6 - finish MultiheadAttention
-July 7 - set up tensorflow & required packages
-July 9 - finish Transformer Embedding, Transformer Encoder
-July 10 - finish Transformer Decoder (with minor problems on the masked MultiheadAttention)'
-July 13 - masking done
-July 14 - Transformer model done
-
-Plans:
-July 16 - finish training & evaluating code
-July 18 - finish documentation
-
-
 Implementing Input & Output Embedding + Positional Encoding:
  1. convert sentences into int vectors (ex. ["I am bad"] => [2 0 1])]
  2. using embedding, convert the int vectors into vectors of dimension d_model
