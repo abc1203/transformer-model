@@ -1,13 +1,3 @@
-
-# import tensorflow_datasets as tfds
-# import os
-
-# data_dir = os.getcwd() + '\datasets'
-# print(data_dir)
-
-# ds = tfds.load('huggingface:wmt14/de-en', split='train', data_dir=data_dir, download=False)
-
-
 from pickle import dump, load
 from collections import Counter
 from turtle import update
@@ -17,9 +7,25 @@ import string
 import unicodedata
 import os
 
+
+"""
+a number of utility functions for data preprocessing
+
+the wmt14 de-en dataset is used to train the transformer model
+to load the dataset from huggingface locally:
+import tensorflow_datasets as tfds
+ds = tfds.load('huggingface:wmt14/de-en', split='train', download=False)
+"""
+
+
 DATA_DIR = os.getcwd() + '\data'
 
-# get file content
+# return directory of target file
+def get_dir(filename):
+    return DATA_DIR + "\\" + filename
+
+
+# read from data file
 def get_file_content(filename):
     file = open(filename, mode='rt', encoding='utf-8')
     file_content = file.read()
@@ -28,9 +34,10 @@ def get_file_content(filename):
     return file_content
 
 
-# convert file content into lists
+# convert file content to list with element for each line
 def get_sentences(file_content):
     return file_content.strip().split('\n')
+
 
 # get the longest and shortest sentence length
 def get_sentences_length(sentences):
@@ -43,6 +50,7 @@ def get_sentences_length(sentences):
     return max_len, min_len
 
 
+# remove non-printable chars, punctations, words that contain numbers
 def get_clean_sentences(sentences):
         clean_sentences = []
         # get regex pattern for printable chars
@@ -73,17 +81,35 @@ def get_clean_sentences(sentences):
         return clean_sentences
 
 
-def get_dir(filename):
-    return DATA_DIR + "\\" + filename
+# load raw data files into .pkl files
+def get_pkl_file(data_filename, output_filename):
+    file_content = get_file_content(get_dir(data_filename))
+    sentences = get_sentences(file_content)
+    
+    max_len, min_len = get_sentences_length(sentences)
+    print(data_filename + ' Data INFO: sentences=%d, min=%d, max=%d' % (len(sentences), min_len, max_len))
+    
+    clean_sentences = get_clean_sentences(sentences)
+    
+    # get pkl file from the cleaned sentences
+    output_file = open(get_dir(output_filename), 'wb')
+    dump(clean_sentences, output_file)
+
+    output_file.close()
+    print(output_filename," saved")
 
 
-# load dataset from pkl file into list
+# ==============================================================================================================
+# further process generated pkl files with updated vocab & OOV tokens
+
+
+# load dataset from generated pkl file
 def load_clean_sentences(filename):
     return load(open(get_dir(filename), 'rb'))
 
 
 # get all vocab above a certain occurrence number into a list
-def get_vocab(sentences, min_occurrence):
+def get_vocab(sentences, min_occurrence = 5):
     vocab = Counter()
 
     # get all vocab
@@ -118,25 +144,6 @@ def save_clean_sentences(sentences, filename):
     print('Saved: %s' % filename)
 
 
-
-# load raw data files into .pkl files
-def get_pkl_file(data_filename, output_filename):
-    file_content = get_file_content(get_dir(data_filename))
-    sentences = get_sentences(file_content)
-    
-    max_len, min_len = get_sentences_length(sentences)
-    print(data_filename + ' Data INFO: sentences=%d, min=%d, max=%d' % (len(sentences), min_len, max_len))
-    
-    clean_sentences = get_clean_sentences(sentences)
-    
-    # get pkl file from the cleaned sentences
-    output_file = open(get_dir(output_filename), 'wb')
-    dump(clean_sentences, output_file)
-
-    output_file.close()
-    print(output_filename," saved")
-
-
 # further process the data and get finalized .pkl files
 def get_finalized_pkl_file(pkl_filename):
     sentences = load_clean_sentences(pkl_filename)
@@ -156,6 +163,3 @@ def get_finalized_pkl_file(pkl_filename):
         print("line",i,":",updated_sentences[i])
     
 
-
-get_finalized_pkl_file("german.pkl")
-get_finalized_pkl_file("english.pkl")
