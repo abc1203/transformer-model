@@ -6,10 +6,13 @@ July 10 - finish Transformer Decoder (with minor problems on the masked Multihea
 July 13 - masking done
 July 14 - Transformer model done
 
-Plans:
-July 16 - finish training & evaluating code
-July 18 - finish documentation
 
+To-do:
+ 1. figure out train test split & batching on the dataset
+ 2. employ label smoothing with epsilon = 0.1
+ 3. implement checkpoints and averaging the checkpoints
+ 4. nltk.translate.bleu & sentence_bleu
+ 
 
 Implementing Input & Output Embedding + Positional Encoding:
  1. convert sentences into int vectors (ex. ["I am bad"] => [2 0 1])]

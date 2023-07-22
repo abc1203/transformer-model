@@ -16,12 +16,10 @@ class LoadData:
     - decoder_seq_len
     """
 
-    def __init__(self, batch_size = 25000, **kwargs):
-        self.batch_size = batch_size
+    def __init__(self, dataset_size = 100000, **kwargs):
+        self.dataset_size = dataset_size
     
-    def get_configs(self, data, start_idx = 0,oov_token='unk'):
-        data = data[start_idx:start_idx+self.batch_size]
-        
+    def get_configs(self, data, oov_token = 'unk'):
         tokenizer = Tokenizer(oov_token=oov_token)
 
         # get seq length + vocab size of data
@@ -45,9 +43,20 @@ class LoadData:
         encoder_data = load(open(get_dir(encoder_filename), 'rb'))
         decoder_data = load(open(get_dir(decoder_filename), 'rb'))
 
-        start_idx = random.randint(len(encoder_data) - self.batch_size)
+        # randomly select a starting index and take a subset of the dataset
+        start_idx = random.randint(len(encoder_data) - self.dataset_size)
         print("start index: ", start_idx)
 
+        encoder_data = encoder_data[start_idx:start_idx+self.dataset_size]
+        decoder_data = decoder_data[start_idx:start_idx+self.dataset_size]
+
+        # shuffle the dataset
+        idx_arr = np.arange(len(encoder_data))
+        np.random.shuffle(idx_arr)
+        encoder_data = np.array(encoder_data)[idx_arr.astype(int)]
+        decoder_data = np.array(decoder_data)[idx_arr.astype(int)]
+
+        # obtain configs from data
         encoder_inputs, encoder_vocab_size, encoder_seq_len = self.get_configs(encoder_data, start_idx)
         decoder_inputs, decoder_vocab_size, decoder_seq_len = self.get_configs(decoder_data, start_idx)
 
