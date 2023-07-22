@@ -60,6 +60,8 @@ class LoadData:
         encoder_inputs, encoder_vocab_size, encoder_seq_len = self.get_configs(encoder_data, start_idx)
         decoder_inputs, decoder_vocab_size, decoder_seq_len = self.get_configs(decoder_data, start_idx)
 
+        print("Data Loading Complete")
+
         return encoder_inputs, encoder_vocab_size, encoder_seq_len, decoder_inputs, decoder_vocab_size, decoder_seq_len
 
 
