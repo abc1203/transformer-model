@@ -30,6 +30,9 @@ class TrainTransformer:
 
         # load optimizer
         self.AdamOptimizer = AdamOptimizer()
+
+        print("Transformer Initialized")
+        print("=======================================================================================================")
     
 
     def train_step(self, encoder_inputs, decoder_inputs, decoder_outputs):
@@ -38,16 +41,18 @@ class TrainTransformer:
         return pred
     
     def __call__(self):
+        print("Starting Training: ")
+        
         for step, (data_trainX, data_trainY) in enumerate(self.data_train):
             encoder_inputs = data_trainX[1:]
             decoder_inputs = data_trainY[:-1]
             decoder_outputs = data_trainY[1:]
 
-            print(tf.shape(encoder_inputs))
-
             self.train_step(encoder_inputs, decoder_inputs, decoder_outputs)
 
             break
+
+        print("Training Complete")
 
 
 train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', 25)

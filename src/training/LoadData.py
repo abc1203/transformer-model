@@ -1,7 +1,7 @@
 from pickle import load
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-from tensorflow import convert_to_tensor
+from tensorflow import convert_to_tensor, math
 from numpy import random
 from data_preprocessing_utils import *
 
@@ -21,18 +21,16 @@ class LoadData:
     
     def get_configs(self, data, oov_token = 'unk'):
         tokenizer = Tokenizer(oov_token=oov_token)
-
-        # get seq length + vocab size of data
-        vocab, updated_vocab = get_vocab(data)
-        vocab_size = len(updated_vocab)
-        max_seq_len, min_seq_len = get_sentences_length(data)
         
         # encode data in the form of numeric sequences
         tokenizer.fit_on_texts(data)
         sequences = tokenizer.texts_to_sequences(data)
 
-        # padding + convert into tensor
+        # get seq len + vocab size
         max_seq_len, min_seq_len = get_sentences_length(sequences)
+        vocab_size = len(tokenizer.word_index) + 1
+
+        # padding + convert to tensor
         padded_sequences = pad_sequences(sequences, maxlen=max_seq_len, padding='post')
         tensor_data = convert_to_tensor(padded_sequences)
 
@@ -49,6 +47,8 @@ class LoadData:
 
         encoder_data = encoder_data[start_idx:start_idx+self.dataset_size]
         decoder_data = decoder_data[start_idx:start_idx+self.dataset_size]
+        # encoder_data = encoder_data[:self.dataset_size]
+        # decoder_data = decoder_data[:self.dataset_size]
 
         # shuffle the dataset
         idx_arr = np.arange(len(encoder_data))
