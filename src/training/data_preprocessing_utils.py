@@ -109,7 +109,7 @@ def load_clean_sentences(filename):
 
 
 # get all vocab above a certain occurrence number into a list
-def get_vocab(sentences, min_occurrence = 1):
+def get_vocab(sentences, min_occurrence = 5):
     vocab = Counter()
 
     # get all vocab
