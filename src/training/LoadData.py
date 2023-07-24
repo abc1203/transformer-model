@@ -16,7 +16,7 @@ class LoadData:
     - decoder_seq_len
     """
 
-    def __init__(self, dataset_size = 100000, **kwargs):
+    def __init__(self, dataset_size = 1000, **kwargs):
         self.dataset_size = dataset_size
     
     def get_configs(self, data, oov_token = 'unk'):
@@ -61,6 +61,7 @@ class LoadData:
         decoder_inputs, decoder_vocab_size, decoder_seq_len = self.get_configs(decoder_data, start_idx)
 
         print("Data Loading Complete")
+        print("=======================================================================================================")
 
         return encoder_inputs, encoder_vocab_size, encoder_seq_len, decoder_inputs, decoder_vocab_size, decoder_seq_len
 
