@@ -1,3 +1,10 @@
+To-Do:
+ - calculate BLEU locally
+ - finish main.py
+ - train with bigger dataset using GPU accel
+ - documentation
+
+
 Implementing Input & Output Embedding + Positional Encoding:
  1. convert sentences into int vectors (ex. ["I am bad"] => [2 0 1])]
  2. using embedding, convert the int vectors into vectors of dimension d_model
