@@ -17,15 +17,15 @@ class MultiheadAttention(Layer):
         W_q = Dense(d_k) => units = d_k
 
         Calculating shapes of q, k, v:
-        shape(W_q(queries)) = (batch size = 64, input seq length = 5, d_k = 64)
-        => after reshape(q, shape=[batch_size, q_len, h, -1]), shape = (64, 5, 8, 8)
-        => after transposing, shape = (64, 8, 5, 8)
-        => shape(q) = shape(k) = shape(v) = (64, 8, 5, 8) before feeding into ScaledDotProductAttention
+        shape(W_q(queries)) = (batch size, input seq length, d_k)
+        => after reshape(q, shape=[batch_size, q_len, h, -1]), shape = (batch_size, seq_len, h, d_k/h)
+        => after transposing, shape = (batch_size, h, seq_len, d_k/h)
+        => shape(q) = shape(k) = shape(v) = (batch_size, h, seq_len, d_k/h) before feeding into ScaledDotProductAttention
 
         Calculating shape of output:
         shape(o) = (64, 8, 5, 5) after ScaledDotProductAttention
-        => shape(o) = (64, 8, 5, 8) after transpose
-        => shape(output) = (64, 5, 64)
+        => shape(o) = (batch_size, h, seq_len, d_k/h) after transpose
+        => shape(output) = (batch_size, seq_len, d_k)
     """
     
     def __init__(self, h = 8, d_k = 64, d_v = 64, d_model = 512, **kwargs):
@@ -52,7 +52,6 @@ class MultiheadAttention(Layer):
         v = self.W_values(values)
 
         # reshape tensors such that different heads are separated; (batch_size, len, (h*col)) => (batch_size, len, h, col)
-        # by default they should have shape (64, len, 8, 8)
         q = reshape(q, shape=[batch_size, q_len, h, -1])
         k = reshape(k, shape=[batch_size, k_len, h, -1])
         v = reshape(v, shape=[batch_size, v_len, h, -1])

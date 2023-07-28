@@ -83,13 +83,3 @@ class LoadData:
         return encoder_test, encoder_vocab_size, encoder_seq_len, decoder_test, decoder_vocab_size, decoder_seq_len
 
 
-
-# data = LoadData()
-# encoder_inputs, encoder_vocab_size, encoder_seq_len, decoder_inputs, decoder_vocab_size, decoder_seq_len = data('english_updated.pkl', 'german_updated.pkl')
-
-# print(encoder_inputs[0:5])
-# print("Encoder vocab size: ", encoder_vocab_size)
-# print("Encoder seq len: ", encoder_seq_len)
-# print(decoder_inputs[0:5])
-# print("Decoder vocab size: ", decoder_vocab_size)
-# print("Decoder seq len: ", decoder_seq_len)

@@ -6,7 +6,7 @@ import numpy as np
 class ScaledDotProductAttention(Layer):
     """
     Attention(Q, K, V) = softmax(QK^T/sqrt(d_k))V
-    Q, K, V shape = (batch_size = 64, input_seq_length = 5, d_k = d_v = 64)
+    Q, K, V shape = (batch_size, input_seq_length, d_k = d_v = 64)
     shape(output) = shape(V)
     """
 
@@ -31,7 +31,6 @@ class ScaledDotProductAttention(Layer):
 
     def call(self, queries, keys, values, d_k, is_masking=False):
         # 1. Matmul Q & K^T
-        # res has shape(64, 8, 5, 5)
         res = matmul(queries, keys, transpose_b=True)
 
         # 2. scaling factor of sqrt(d_k)
@@ -45,7 +44,7 @@ class ScaledDotProductAttention(Layer):
         res = self.softmax(res, mask=mask_mat)
 
         # 5. multiply by V
-        # shape(res) = (64, 5, 64) = (batch_size, input_seq_length, d_v)
+        # shape(res) = (batch_size, input_seq_length, d_v)
         res = matmul(res, values)
 
         return res
