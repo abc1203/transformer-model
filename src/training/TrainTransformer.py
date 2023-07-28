@@ -1,7 +1,6 @@
-from statistics import mean
 import sys
 import os
-sys.path.insert(0, os.getcwd() +'\src\model')
+sys.path.insert(0, os.getcwd() + '\src\model')
 
 import tensorflow as tf
 from tensorflow import data, math, cast, float32, one_hot, shape, convert_to_tensor
@@ -13,9 +12,9 @@ from AdamOptimizer import AdamOptimizer
 
 
 class TrainTransformer:
-    def __init__(self, encoder_filename, decoder_filename, batch_size=64, **kwargs):
+    def __init__(self, encoder_filename, decoder_filename, dataset_size=10000, batch_size=64, **kwargs):
         # load dataset and related configs
-        self.Dataset = LoadData()
+        self.Dataset = LoadData(dataset_size)
         self.encoder_inputs, self.encoder_vocab_size, self.encoder_seq_len, self.decoder_inputs, self.decoder_vocab_size, self.decoder_seq_len = self.Dataset(encoder_filename, decoder_filename)
 
         print("Encoder vocab size: ", self.encoder_vocab_size)
@@ -61,20 +60,21 @@ class TrainTransformer:
 
         # calculate mean loss
         mean_loss = math.reduce_sum(loss_masked) / math.reduce_sum(mask_mat)
-        mean_loss = mean_loss.item()
-        print("Mean Loss in current batch: ", mean_loss)
+        print("Mean Loss in current batch (None => graph execution): ", tf.get_static_value(mean_loss))
 
+        # mean_loss is in the form of a one-element tensor
         return mean_loss
     
-
+    # train step; returns the loss of the step
     # graph execution
-    @tf.function
-    def train_step(self, encoder_inputs, decoder_inputs, decoder_outputs):
+    # @tf.function
+    def train_step(self, encoder_inputs, decoder_inputs, decoder_outputs, graph_execution = True):
+        print("Training step...")
         with tf.GradientTape() as tape:
             pred = self.Transformer(encoder_inputs, decoder_inputs, is_training=True)
             print(pred)
     
-            # get loss value
+            # get loss value (in the form of a tensor)
             loss = self.get_loss(pred, decoder_outputs, self.decoder_vocab_size)
         
         print("Updating weights...")
@@ -86,25 +86,53 @@ class TrainTransformer:
         print("Done")
         print("Step finished")
         print("=============================================================================================")
+
+        # return loss as a numeric value
+        if graph_execution == False:
+            return tf.get_static_value(loss)
+        return loss
     
 
-    def __call__(self):
+    def __call__(self, epoch_num = 50):
         print("Starting Training: ")
+
+        # load checkpoints
+        ckpt = tf.train.Checkpoint(optimizer=self.AdamOptimizer, model=self.Transformer)
+        manager = tf.train.CheckpointManager(ckpt, os.getcwd()+'\\tf_ckpts', max_to_keep=3)
+
+        # initialize loss summaries
+        losses = []
+
+        # train by epoch
+        for epoch in range(epoch_num):
+            print("Training epoch #", epoch+1, ": ")
+
+            # train by batch
+            for step, (data_trainX, data_trainY) in enumerate(self.data_train):
+                # decoder input is shifted right
+                encoder_inputs = data_trainX[1:]
+                decoder_inputs = data_trainY[:-1]
+                decoder_outputs = data_trainY[1:]
+
+                loss = self.train_step(encoder_inputs, decoder_inputs, decoder_outputs).numpy()
+
+            # record loss after each epoch
+            losses.append(loss)
+            print("Loss summary (one after each epoch): ")
+            print(losses)
+            
+            print("Epoch ", epoch+1, " done")
+            print("=======================================================================================================")
+
         
-        # train by batch
-        for step, (data_trainX, data_trainY) in enumerate(self.data_train):
-            # decoder input is shifted right
-            encoder_inputs = data_trainX[1:]
-            decoder_inputs = data_trainY[:-1]
-            decoder_outputs = data_trainY[1:]
-
-            self.train_step(encoder_inputs, decoder_inputs, decoder_outputs)
-
-            break
-
         print("Training Complete")
         print("=======================================================================================================")
+        
+        # save the trained model
+        print("Saving model...")
+        self.Transformer.save(os.getcwd() + '\saved_model\\transformer_model')
+        print("Model saved")
 
 
-train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl')
-train_transformer()
+train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', dataset_size=64)
+train_transformer(epoch_num=1)

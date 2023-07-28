@@ -1,4 +1,4 @@
-from tensorflow import cast, float32
+from tensorflow import cast, float32, math
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.optimizers.schedules import LearningRateSchedule
 
@@ -25,7 +25,7 @@ class LearningRate(LearningRateSchedule):
     
     def __call__(self, step_num):
         step_num = cast(step_num, float32)
-        lrate = pow(self.d_model, -0.5) * min(pow(step_num, -0.5), step_num * pow(self.warmup_steps, -1.5))
+        lrate = pow(self.d_model, -0.5) * math.minimum(pow(step_num, -0.5), step_num * pow(self.warmup_steps, -1.5))
 
         return lrate
 

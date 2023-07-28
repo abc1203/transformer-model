@@ -8,10 +8,10 @@ July 14 - Transformer model done
 
 
 To-do:
- 1. figure out train test split & batching on the dataset
- 2. employ label smoothing with epsilon = 0.1
- 3. implement checkpoints and averaging the checkpoints
- 4. nltk.translate.bleu & sentence_bleu
+ - loading the model from the latest checkpoints
+ - figure out BLEU locally (TestTransformer class)
+ - train from bigger dataset size (ideally 100,000); can use GPU/TPU accel or whatever technique
+ - documentation
  
 
 Implementing Input & Output Embedding + Positional Encoding:

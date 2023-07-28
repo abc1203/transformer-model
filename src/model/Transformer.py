@@ -1,9 +1,10 @@
-from tensorflow.keras.layers import Layer, Dense, Softmax
+from tensorflow.keras.layers import Dense, Softmax
+from tensorflow.keras import Model
 from TransformerEncoder import TransformerEncoder
 from TransformerDecoder import TransformerDecoder
 
 
-class Transformer(Layer):
+class Transformer(Model):
     """
     the complete Transformer Model implemented
     the transformer model makes use of the encoder & decoder to compute tensors of shape = (batch_size, decoder_seq_len, d_model)
