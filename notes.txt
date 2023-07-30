@@ -1,6 +1,10 @@
 To-Do:
+ - potential optimizations:
+    - pick out the target dataset first and then take min_occurrences
+    - abandon sentences with seq_len > 100
+    - resolve the issue with len(pred) always equal to len(target): potential sol is to add <EOL> symbol to input text
  - train with bigger dataset
- - documentation
+ - documentation on training & testing specs
 
 
 Implementing Input & Output Embedding + Positional Encoding:
