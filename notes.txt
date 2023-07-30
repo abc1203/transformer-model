@@ -1,7 +1,5 @@
 To-Do:
- - calculate BLEU locally
- - finish main.py
- - train with bigger dataset using GPU accel
+ - train with bigger dataset
  - documentation
 
 
@@ -21,7 +19,6 @@ Masking:
      - masking used in the 1st decoder sublayer
      - purpose of lookahead mask is to make sure that the succeeding words will not be considered in the model
      - lookahead mask marks the succeeding words by 1 
- - in the sample implementation, both the padding & lookahead mask are used in the masked MultiheadAttention
 
 
 Training the model:
