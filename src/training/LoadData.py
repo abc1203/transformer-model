@@ -43,8 +43,8 @@ class LoadData:
 
         # train test split
         split_idx = self.dataset_size * train_test_split
-        train_data = tensor_data[:split_idx]
-        test_data = tensor_data[split_idx:]
+        train_data = tensor_data[:int(split_idx)]
+        test_data = tensor_data[int(split_idx):]
 
         # save tokenizer for potential later use in testing
         self.tokenizer = tokenizer
@@ -72,8 +72,8 @@ class LoadData:
 
         # obtain configs from data
         # after these are called, self.tokenizer is the tokenizer for decoder data
-        encoder_inputs, encoder_test, encoder_vocab_size, encoder_seq_len = self.get_configs(encoder_data, start_idx)
-        decoder_inputs, decoder_test, decoder_vocab_size, decoder_seq_len = self.get_configs(decoder_data, start_idx)
+        encoder_inputs, encoder_test, encoder_vocab_size, encoder_seq_len = self.get_configs(encoder_data)
+        decoder_inputs, decoder_test, decoder_vocab_size, decoder_seq_len = self.get_configs(decoder_data)
 
         print("Data Loading Complete")
         print("=======================================================================================================")
