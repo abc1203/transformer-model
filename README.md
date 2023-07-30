@@ -3,7 +3,7 @@ A Tensorflow implementation of the transformer deep learning model, based on the
 
 
 The implementation follows the model architecture from the original work:
-<img src="https://github.com/JasonChen1203/transformer-model/blob/main/img/transformer_model_architecture.png" width="400" height="1000">
+<img src="https://github.com/JasonChen1203/transformer-model/blob/main/img/transformer_model_architecture.png" width="50%" height="50%">
 
 The attention mechanism is shown as below:
 ![Screenshot of attention mechanism](https://github.com/JasonChen1203/transformer-model/blob/main/img/attention_mechanism.png)
