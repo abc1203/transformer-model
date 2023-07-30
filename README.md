@@ -6,4 +6,4 @@ The implementation follows the model architecture from the original work:
 <img src="https://github.com/JasonChen1203/transformer-model/blob/main/img/transformer_model_architecture.png" width="70%" height="70%">
 
 The attention mechanism is shown as below:  
-<img src="https://github.com/JasonChen1203/transformer-model/blob/main/img/attention_mechanism.png" width="75%" height="75%">
+<img src="https://github.com/JasonChen1203/transformer-model/blob/main/img/attention_mechanism.png" width="85%" height="85%">
