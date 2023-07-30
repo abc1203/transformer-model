@@ -64,10 +64,11 @@ class TrainTransformer:
 
         # mean_loss is in the form of a one-element tensor
         return mean_loss
-    
+
+
     # train step; returns the loss of the step
     # graph execution
-    # @tf.function
+    @tf.function
     def train_step(self, encoder_inputs, decoder_inputs, decoder_outputs, graph_execution = True):
         print("Training step...")
         with tf.GradientTape() as tape:
@@ -95,10 +96,6 @@ class TrainTransformer:
 
     def __call__(self, epoch_num = 50):
         print("Starting Training: ")
-
-        # load checkpoints
-        ckpt = tf.train.Checkpoint(optimizer=self.AdamOptimizer, model=self.Transformer)
-        manager = tf.train.CheckpointManager(ckpt, os.getcwd()+'\\tf_ckpts', max_to_keep=3)
 
         # initialize loss summaries
         losses = []
@@ -134,5 +131,5 @@ class TrainTransformer:
         print("Model saved")
 
 
-train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', dataset_size=64)
-train_transformer(epoch_num=1)
+train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', dataset_size=10000)
+train_transformer()
