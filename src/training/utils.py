@@ -145,11 +145,12 @@ def save_clean_sentences(sentences, filename):
 
 
 # further process the data and get finalized .pkl files
-def get_finalized_pkl_file(pkl_filename):
+def get_finalized_pkl_file(pkl_filename, start_idx = 1000, dataset_size = 10000):
     sentences = load_clean_sentences(pkl_filename)
+    sentences = sentences[start_idx:start_idx+dataset_size]
     
     # process the vocab size
-    all_vocab, updated_vocab = get_vocab(sentences, min_occurrence=5)
+    all_vocab, updated_vocab = get_vocab(sentences, min_occurrence=2)
     print('All Vocabulary Size: %d' % len(all_vocab))
     print('Updated Vocabulary Size: %d' % len(updated_vocab))
 
@@ -163,3 +164,5 @@ def get_finalized_pkl_file(pkl_filename):
         print("line",i,":",updated_sentences[i])
     
 
+# get_finalized_pkl_file('english.pkl')
+# get_finalized_pkl_file('german.pkl')

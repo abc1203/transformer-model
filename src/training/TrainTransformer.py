@@ -33,7 +33,7 @@ class TrainTransformer:
         self.AdamOptimizer = AdamOptimizer()
 
         # load loss function with label smoothing of epsilon = 0.1
-        self.LossFunction = CategoricalCrossentropy(from_logits=False, label_smoothing=0.1, reduction="none")
+        self.LossFunction = CategoricalCrossentropy(from_logits=False, label_smoothing=0.1, reduction='none')
 
         print("Transformer Initialized")
         print("=======================================================================================================")
@@ -94,7 +94,7 @@ class TrainTransformer:
         return loss
     
 
-    def __call__(self, epoch_num = 50):
+    def __call__(self, epoch_num = 40):
         print("Starting Training: ")
 
         # initialize loss summaries
@@ -121,14 +121,16 @@ class TrainTransformer:
             print("Epoch ", epoch+1, " done")
             print("=======================================================================================================")
 
+            # save model after every 5 epochs
+            if (epoch+1) % 5 == 0:
+                print("Saving model...")
+                self.Transformer.save(os.getcwd() + '\saved_model\\transformer_model')
+                print("Model saved")
+
         
         print("Training Complete")
         print("=======================================================================================================")
         
-        # save the trained model
-        print("Saving model...")
-        self.Transformer.save(os.getcwd() + '\saved_model\\transformer_model')
-        print("Model saved")
 
 
 train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', dataset_size=10000)

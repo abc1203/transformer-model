@@ -70,6 +70,8 @@ class TestTransformer:
         target_processed = [target[i].split() for i in range(len(target))]
 
         # calculate BLEU score for each sentence
+        
+        print([pred_processed[i] for i in range(len(pred_processed))])
         bleu_scores_batch = [sentence_bleu([target_processed[i]], pred_processed[i]) for i in range(len(target_processed))]
 
         return np.mean(bleu_scores_batch)
