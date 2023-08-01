@@ -64,7 +64,6 @@ class LoadData:
         for i in range(self.dataset_size):
             encoder_data[i] = encoder_data[i] + ' <eol>'
             decoder_data[i] = decoder_data[i] + ' <eol>'
-        print(encoder_data[0])
 
         # shuffle the dataset
         idx_arr = np.arange(len(encoder_data))

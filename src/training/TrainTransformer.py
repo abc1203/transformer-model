@@ -38,7 +38,7 @@ class TrainTransformer:
         print("Transformer Initialized")
         print("=======================================================================================================")
 
-    
+        
     def get_loss(self, pred, target, target_vocab_size):
         # create padding mask so zeros will not be included
         # shape(mask_mat) = (batch_size, seq_len)
