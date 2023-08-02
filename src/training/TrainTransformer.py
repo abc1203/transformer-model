@@ -4,7 +4,7 @@ sys.path.insert(0, os.getcwd() + '\src\model')
 
 import tensorflow as tf
 from tensorflow import data, math, cast, float32, one_hot, shape, convert_to_tensor
-from tensorflow.keras.losses import CategoricalCrossentropy
+from tensorflow.keras.losses import SparseCategoricalCrossentropy
 from Transformer import Transformer
 from LoadData import LoadData
 from AdamOptimizer import AdamOptimizer
@@ -33,30 +33,23 @@ class TrainTransformer:
         self.AdamOptimizer = AdamOptimizer()
 
         # load loss function with label smoothing of epsilon = 0.1
-        self.LossFunction = CategoricalCrossentropy(from_logits=False, label_smoothing=0.1, reduction='none')
+        self.LossFunction = SparseCategoricalCrossentropy(from_logits=True)
 
         print("Transformer Initialized")
         print("=======================================================================================================")
 
         
-    def get_loss(self, pred, target, target_vocab_size):
+    def get_loss(self, pred, target):
         # create padding mask so zeros will not be included
         # shape(mask_mat) = (batch_size, seq_len)
         mask_mat = math.logical_not(math.equal(target, 0))
         mask_mat = cast(mask_mat, float32)
 
-        # apply one-hot encoding on target
-        # shape(target_one_hot) = (batch_size, seq_len, vocab_size)
-        # shape(loss) = (batch_size, seq_len)
-        target_one_hot = one_hot(target, depth=target_vocab_size)
-        loss = self.LossFunction(target_one_hot, pred)
+        # loss function
+        loss = self.LossFunction(target, pred)
 
         # apply masking 
-        loss_masked = []
-        for i in range(loss.shape[0]):
-            loss_item = [loss[i][j] * mask_mat[i][j] for j in range(loss.shape[1])]
-            loss_masked.append(loss_item)
-        loss_masked = convert_to_tensor(loss_masked)
+        loss_masked = loss * mask_mat
 
         # calculate mean loss
         mean_loss = math.reduce_sum(loss_masked) / math.reduce_sum(mask_mat)
@@ -76,7 +69,7 @@ class TrainTransformer:
             print(pred)
     
             # get loss value (in the form of a tensor)
-            loss = self.get_loss(pred, decoder_outputs, self.decoder_vocab_size)
+            loss = self.get_loss(pred, decoder_outputs)
         
         print("Updating weights...")
     
@@ -133,5 +126,5 @@ class TrainTransformer:
         
 
 
-train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', dataset_size=10000)
+train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', dataset_size=64)
 train_transformer()

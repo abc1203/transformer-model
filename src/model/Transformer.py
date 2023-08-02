@@ -8,7 +8,8 @@ class Transformer(Model):
     """
     the complete Transformer Model implemented
     the transformer model makes use of the encoder & decoder to compute tensors of shape = (batch_size, decoder_seq_len, d_model)
-    a final linear transformation is applied on the outputs, before softmaxing to obtain output probabilities
+    a final linear transformation is applied on the outputs
+    a final softmax layer is in the original model architecture; ditched because of dimensionality & accuracy issues
     """
 
     def __init__(self, encoder_vocab_size, decoder_vocab_size, encoder_seq_len, decoder_seq_len,
@@ -17,7 +18,7 @@ class Transformer(Model):
         self.transformer_encoder = TransformerEncoder(encoder_vocab_size, encoder_seq_len, N, h, d_k, d_v, d_model, d_ff, dropout_rate)
         self.transformer_decoder = TransformerDecoder(decoder_vocab_size, decoder_seq_len, N, h, d_k, d_v, d_model, d_ff, dropout_rate)
         self.linear = Dense(decoder_vocab_size)
-        self.softmax = Softmax()
+        # self.softmax = Softmax()
     
 
     def call(self, encoder_inputs, decoder_inputs, is_training = False):
@@ -31,7 +32,7 @@ class Transformer(Model):
         res = self.linear(decoder_outputs)
 
         # apply softmax
-        res = self.softmax(res)
+        # res = self.softmax(res)
 
         return res
 
