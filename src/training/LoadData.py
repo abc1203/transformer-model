@@ -4,7 +4,7 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from tensorflow import convert_to_tensor, math
 from numpy import random
-from data_preprocessing_utils import *
+from utils import *
 
 
 class LoadData:
@@ -52,17 +52,18 @@ class LoadData:
         return train_data, test_data, vocab_size, max_seq_len
 
 
-    def __call__(self, encoder_filename, decoder_filename, start_idx=1000, is_training = True):
+    def __call__(self, encoder_filename, decoder_filename, is_training = True):
         encoder_data = load(open(get_dir(encoder_filename), 'rb'))
         decoder_data = load(open(get_dir(decoder_filename), 'rb'))
 
-        # take a subset of the dataset using the start index
-        print("start index: ", start_idx)
+        # take a subset of the dataset
+        encoder_data = encoder_data[:self.dataset_size]
+        decoder_data = decoder_data[:self.dataset_size]
 
-        encoder_data = encoder_data[start_idx:start_idx+self.dataset_size]
-        decoder_data = decoder_data[start_idx:start_idx+self.dataset_size]
-        # encoder_data = encoder_data[:self.dataset_size]
-        # decoder_data = decoder_data[:self.dataset_size]
+        # add <eol> symbol to every line
+        for i in range(self.dataset_size):
+            encoder_data[i] = encoder_data[i] + ' <eol>'
+            decoder_data[i] = decoder_data[i] + ' <eol>'
 
         # shuffle the dataset
         idx_arr = np.arange(len(encoder_data))
