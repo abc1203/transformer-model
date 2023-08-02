@@ -126,5 +126,5 @@ class TrainTransformer:
         
 
 
-train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', dataset_size=64)
+train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', dataset_size=50000)
 train_transformer()

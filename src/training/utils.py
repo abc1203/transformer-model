@@ -109,7 +109,7 @@ def load_clean_sentences(filename):
 
 
 # get all vocab above a certain occurrence number into a list
-def get_vocab(sentences, min_occurrence = 5):
+def get_vocab(sentences, min_occurrence = 0):
     vocab = Counter()
 
     # get all vocab
@@ -150,7 +150,7 @@ def get_finalized_pkl_file(pkl_filename, start_idx = 1000, dataset_size = 10000)
     sentences = sentences[start_idx:start_idx+dataset_size]
     
     # process the vocab size
-    all_vocab, updated_vocab = get_vocab(sentences, min_occurrence=2)
+    all_vocab, updated_vocab = get_vocab(sentences, min_occurrence=5)
     print('All Vocabulary Size: %d' % len(all_vocab))
     print('Updated Vocabulary Size: %d' % len(updated_vocab))
 
@@ -160,9 +160,12 @@ def get_finalized_pkl_file(pkl_filename, start_idx = 1000, dataset_size = 10000)
     save_clean_sentences(updated_sentences, output_pkl_filename)
 
     # print head of updated sentences
-    for i in range(20):
+    for i in range(5):
         print("line",i,":",updated_sentences[i])
     
 
-# get_finalized_pkl_file('english.pkl')
-# get_finalized_pkl_file('german.pkl')
+
+
+if __name__=='__main__':
+    get_finalized_pkl_file('english.pkl', dataset_size=50000)
+    get_finalized_pkl_file('german.pkl', dataset_size=50000)
