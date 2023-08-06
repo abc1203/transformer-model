@@ -1,8 +1,10 @@
 To-Do:
- - calculate BLEU locally
- - finish main.py
- - train with bigger dataset using GPU accel
- - documentation
+ - potential optimizations:
+    - abandon sentences with seq_len > 100 to decrease dimensionality
+    - resolve the issue with len(pred) always equal to len(target): potential sol is to add <EOL> symbol to input text
+    - use logits & SparseCategoricalCrossentropy
+    - use dataset with more concentrated vocab; commoncrawl's vocab is not concentrated => bad for training
+ - documentation on training & testing specs
 
 
 Implementing Input & Output Embedding + Positional Encoding:
@@ -21,12 +23,17 @@ Masking:
      - masking used in the 1st decoder sublayer
      - purpose of lookahead mask is to make sure that the succeeding words will not be considered in the model
      - lookahead mask marks the succeeding words by 1 
- - in the sample implementation, both the padding & lookahead mask are used in the masked MultiheadAttention
 
 
 Training the model:
  1. implement lrate to be used within the Adam Optimizer
  2. preprocess the WMT dataset
- 3. implement accurcy & BLEU functions or find them in keras/tf
- 4. implement the function that trains the model
+ 3. implement loss function
+ 4. train the model step-by-step by updating the weights using the loss calculated
+
+
+Testing the model:
+ 1. convert logits/softmax probabilities to sequences
+ 2. convert the sequences to text
+ 3. calculate BLUE on the derived text
 
