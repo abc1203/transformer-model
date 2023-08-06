@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.getcwd() + '\src\model')
 
 import tensorflow as tf
-from tensorflow import data, math, cast, float32, one_hot, shape, convert_to_tensor
+from tensorflow import data, math, cast, float32, one_hot, shape, convert_to_tensor, train
 from tensorflow.keras.losses import SparseCategoricalCrossentropy
 from Transformer import Transformer
 from LoadData import LoadData
@@ -87,11 +87,14 @@ class TrainTransformer:
         return loss
     
 
-    def __call__(self, epoch_num = 40):
+    def __call__(self, epoch_num = 25):
         print("Starting Training: ")
 
         # initialize loss summaries
         losses = []
+
+        ckpt = train.Checkpoint(model=self.Transformer, optimizer=self.AdamOptimizer)
+        ckpt_manager = train.CheckpointManager(ckpt, os.getcwd() + '\saved_model_ckpts', max_to_keep=1)
 
         # train by epoch
         for epoch in range(epoch_num):
@@ -100,9 +103,9 @@ class TrainTransformer:
             # train by batch
             for step, (data_trainX, data_trainY) in enumerate(self.data_train):
                 # decoder input is shifted right
-                encoder_inputs = data_trainX[1:]
-                decoder_inputs = data_trainY[:-1]
-                decoder_outputs = data_trainY[1:]
+                encoder_inputs = data_trainX[:, 1:]
+                decoder_inputs = data_trainY[:, :-1]
+                decoder_outputs = data_trainY[:, 1:]
 
                 loss = self.train_step(encoder_inputs, decoder_inputs, decoder_outputs).numpy()
 
@@ -117,7 +120,7 @@ class TrainTransformer:
             # save model after every 5 epochs
             if (epoch+1) % 5 == 0:
                 print("Saving model...")
-                self.Transformer.save(os.getcwd() + '\saved_model\\transformer_model')
+                save_path = ckpt_manager.save()
                 print("Model saved")
 
         
@@ -125,6 +128,6 @@ class TrainTransformer:
         print("=======================================================================================================")
         
 
-
-train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', dataset_size=50000)
-train_transformer()
+if __name__ == '__main__':
+    train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', dataset_size=25000)
+    train_transformer()

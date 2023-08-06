@@ -1,6 +1,7 @@
-# two words different
-from nltk.translate.bleu_score import sentence_bleu
-reference = [['the', 'quick', 'brown', 'fox', 'jumped', 'over', 'the', 'lazy', 'dog']]
-candidate = ['the', 'fast', 'brown', 'fox', 'jumped', 'over', 'the', 'sleepy', 'dog']
-score = sentence_bleu(reference, candidate)
-print(score)
+import tensorflow as tf
+from tensorflow import TensorArray, int64
+
+
+decoder_output = tf.TensorArray(dtype=int64, size=0, dynamic_size=True)
+decoder_output = decoder_output.write(0, 1)
+print((decoder_output.stack())[0])

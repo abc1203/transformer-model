@@ -162,10 +162,15 @@ def get_finalized_pkl_file(pkl_filename, start_idx = 1000, dataset_size = 10000)
     # print head of updated sentences
     for i in range(5):
         print("line",i,":",updated_sentences[i])
+
+
+def load_tokenizer(file_name):
+    with open(file_name, 'rb') as handle:
+        return load(handle)
     
 
 
 
 if __name__=='__main__':
-    get_finalized_pkl_file('english.pkl', dataset_size=50000)
-    get_finalized_pkl_file('german.pkl', dataset_size=50000)
+    get_finalized_pkl_file('english.pkl', dataset_size=25000)
+    get_finalized_pkl_file('german.pkl', dataset_size=25000)

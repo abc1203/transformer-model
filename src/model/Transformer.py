@@ -10,6 +10,7 @@ class Transformer(Model):
     the transformer model makes use of the encoder & decoder to compute tensors of shape = (batch_size, decoder_seq_len, d_model)
     a final linear transformation is applied on the outputs
     a final softmax layer is in the original model architecture; ditched because of dimensionality & accuracy issues
+    shape(output) = (batch_size, decoder_seq_len, decoder_vocab_size)
     """
 
     def __init__(self, encoder_vocab_size, decoder_vocab_size, encoder_seq_len, decoder_seq_len,

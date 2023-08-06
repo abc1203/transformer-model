@@ -1,4 +1,5 @@
 from tensorflow.keras.layers import Layer, Embedding
+import tensorflow as tf
 import numpy as np
 
 
@@ -13,10 +14,9 @@ class TransformerEmbedding(Layer):
     
     def __init__(self, vocab_size, max_seq_len, d_model=512, **kwargs):
         super(TransformerEmbedding, self).__init__(**kwargs)
+        self.d_model = d_model
         # embedding layer
         self.token_embedding = Embedding(vocab_size, d_model)
-        # positional encoding
-        self.positional_encoding = self.get_positional_encoding(max_seq_len, d_model)
     
 
     def get_positional_encoding(self, max_seq_len, d_model):
@@ -31,7 +31,7 @@ class TransformerEmbedding(Layer):
     
 
     def call(self, inputs):
-        res = self.token_embedding(inputs) + self.positional_encoding
+        res = self.token_embedding(inputs) + self.get_positional_encoding(inputs.shape[1], self.d_model)
 
         return res
 
