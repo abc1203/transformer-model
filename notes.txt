@@ -1,8 +1,6 @@
 To-Do:
  - potential optimizations:
     - abandon sentences with seq_len > 100 to decrease dimensionality
-    - resolve the issue with len(pred) always equal to len(target): potential sol is to add <EOL> symbol to input text
-    - use logits & SparseCategoricalCrossentropy
     - use dataset with more concentrated vocab; commoncrawl's vocab is not concentrated => bad for training
  - documentation on training & testing specs
 
