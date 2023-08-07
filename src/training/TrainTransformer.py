@@ -129,5 +129,5 @@ class TrainTransformer:
         
 
 if __name__ == '__main__':
-    train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', dataset_size=25000)
+    train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', dataset_size=10000)
     train_transformer()

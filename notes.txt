@@ -2,6 +2,10 @@ To-Do:
  - potential optimizations:
     - abandon sentences with seq_len > 100 to decrease dimensionality
     - use dataset with more concentrated vocab; commoncrawl's vocab is not concentrated => bad for training
+ - get a working model for translation
+    - put in accuracy function
+    - TransformerEmbedding
+    - masks in attention
  - documentation on training & testing specs
 
 
