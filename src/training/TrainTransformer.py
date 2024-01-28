@@ -65,7 +65,7 @@ class TrainTransformer:
     def train_step(self, encoder_inputs, decoder_inputs, decoder_outputs, graph_execution = True):
         print("Training step...")
         with tf.GradientTape() as tape:
-            pred = self.Transformer(encoder_inputs, decoder_inputs, is_training=True)
+            pred = self.Transformer(encoder_inputs, decoder_inputs, training=True)
             print(pred)
     
             # get loss value (in the form of a tensor)

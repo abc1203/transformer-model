@@ -1,12 +1,11 @@
 To-Do:
- - potential optimizations:
-    - abandon sentences with seq_len > 100 to decrease dimensionality
-    - use dataset with more concentrated vocab; commoncrawl's vocab is not concentrated => bad for training
- - get a working model for translation
-    - put in accuracy function
-    - TransformerEmbedding
-    - masks in attention
- - documentation on training & testing specs
+ 1. Check the ckpts, enc_tokenizer, dec_tokenizer from LRScheduler
+ 2. Check if Translate.py is working from the saved model
+ 3. Once working, gradually migrate code from online resource to own:
+    - Model: multihead attention, positionembedding, encoder, decoder
+    - Training: PrepareData -> LoadData, LRScheduler -> TrainTransformer, Translate -> TestTransformer
+ 4. Train the working model (own code) with 100,000+ data points
+ 5. Present the results & Conclude
 
 
 Implementing Input & Output Embedding + Positional Encoding:

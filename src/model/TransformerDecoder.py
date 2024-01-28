@@ -1,6 +1,8 @@
 from tensorflow.keras.layers import Layer, Dropout
 from TransformerEmbedding import TransformerEmbedding
 from TransformerDecoderLayer import TransformerDecoderLayer
+from PositionEmbeddingFixedWeights import PositionEmbeddingFixedWeights
+from numpy import random
 
 
 class TransformerDecoder(Layer):
@@ -17,20 +19,37 @@ class TransformerDecoder(Layer):
             h = 8, d_k = 64, d_v = 64, d_model = 512, d_ff = 2048, dropout_rate = 0.1, **kwargs):
         super(TransformerDecoder, self).__init__(**kwargs)
         self.transformer_embedding = TransformerEmbedding(vocab_size, max_seq_len, d_model)
+        self.pos_encoding = PositionEmbeddingFixedWeights(max_seq_len, vocab_size, d_model)
         self.transformer_decoder_layers = [TransformerDecoderLayer(h, d_k, d_v, d_model, d_ff, dropout_rate) for _ in range(N)]
         self.dropout = Dropout(dropout_rate)
     
 
-    def call(self, outputs, encoder_output, is_training = False):
-        # perform output embedding & positional encoding onto the outputs
-        res = self.transformer_embedding(outputs)
+    # def call(self, outputs, encoder_output, is_training = False):
+    #     # perform output embedding & positional encoding onto the outputs
+    #     res = self.transformer_embedding(outputs)
 
-        # apply dropout to the sum of the embeddings and the positional encodings
-        res = self.dropout(res, is_training)
+    #     # apply dropout to the sum of the embeddings and the positional encodings
+    #     res = self.dropout(res, is_training)
 
-        # put the resulting output into the encoder layers (N = 6 by default)
-        for i, transformer_decoder_layer in enumerate(self.transformer_decoder_layers):
-            res = transformer_decoder_layer(res, encoder_output, is_training)
+    #     # put the resulting output into the encoder layers (N = 6 by default)
+    #     for i, transformer_decoder_layer in enumerate(self.transformer_decoder_layers):
+    #         res = transformer_decoder_layer(res, encoder_output, is_training)
         
-        return res
+    #     return res
+    def call(self, output_target, encoder_output, lookahead_mask, padding_mask, training):
+        # Generate the positional encoding
+        pos_encoding_output = self.pos_encoding(output_target)
+        # Expected output shape = (number of sentences, sequence_length, d_model)
+ 
+        # Add in a dropout layer
+        x = self.dropout(pos_encoding_output, training=training)
+ 
+        # Pass on the positional encoded values to each encoder layer
+        for i, layer in enumerate(self.transformer_decoder_layers):
+            x = layer(x, encoder_output, lookahead_mask, padding_mask, training)
+ 
+        return x
+
+
+
 

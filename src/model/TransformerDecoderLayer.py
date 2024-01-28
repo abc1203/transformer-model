@@ -35,33 +35,63 @@ class TransformerDecoderLayer(Layer):
         self.dropout3 = Dropout(dropout_rate)
         self.add_norm3 = LayerNorm()
     
-    def call(self, embedded_output, encoder_output, is_training = False):
-        # 1a. go through masked multihead attention
-        res1 = self.multihead_attention1(embedded_output, embedded_output, embedded_output, is_masking=True)
+    # def call(self, embedded_output, encoder_output, is_training = False):
+    #     # 1a. go through masked multihead attention
+    #     res1 = self.multihead_attention1(embedded_output, embedded_output, embedded_output, is_masking=True)
 
-        # 1b. apply dropout
-        res1 = self.dropout1(res1, is_training)
+    #     # 1b. apply dropout
+    #     res1 = self.dropout1(res1, is_training)
 
-        # 1c. apply add & normalization
-        res1 = self.add_norm1(embedded_output, res1)
+    #     # 1c. apply add & normalization
+    #     res1 = self.add_norm1(embedded_output, res1)
 
-        # 2a. go though 2nd nonmasked multihead attention
-        res2 = self.multihead_attention2(res1, encoder_output, encoder_output, is_masking=False)
+    #     # 2a. go though 2nd nonmasked multihead attention
+    #     res2 = self.multihead_attention2(res1, encoder_output, encoder_output, is_masking=False)
 
-        # 2b. apply dropout
-        res2 = self.dropout2(res2, is_training)
+    #     # 2b. apply dropout
+    #     res2 = self.dropout2(res2, is_training)
 
-        # 2c. apply add & normalization
-        res2 = self.add_norm2(res1, res2)
+    #     # 2c. apply add & normalization
+    #     res2 = self.add_norm2(res1, res2)
 
-        # 3a. feed forward the result from the 2nd sublayer
-        res3 = self.feed_forward(res2)
+    #     # 3a. feed forward the result from the 2nd sublayer
+    #     res3 = self.feed_forward(res2)
 
-        # 3b. apply dropout
-        res3 = self.dropout3(res3, is_training)
+    #     # 3b. apply dropout
+    #     res3 = self.dropout3(res3, is_training)
 
-        # 3c. apply add & normalization
-        res3 = self.add_norm3(res2, res3)
+    #     # 3c. apply add & normalization
+    #     res3 = self.add_norm3(res2, res3)
 
-        return res3
+    #     return res3
+    def call(self, x, encoder_output, lookahead_mask, padding_mask, training):
+        # Multi-head attention layer
+        multihead_output1 = self.multihead_attention1(x, x, x, lookahead_mask)
+        # Expected output shape = (batch_size, sequence_length, d_model)
+    
+        # Add in a dropout layer
+        multihead_output1 = self.dropout1(multihead_output1, training=training)
+    
+        # Followed by an Add & Norm layer
+        addnorm_output1 = self.add_norm1(x, multihead_output1)
+        # Expected output shape = (batch_size, sequence_length, d_model)
+    
+        # Followed by another multi-head attention layer
+        multihead_output2 = self.multihead_attention2(addnorm_output1, encoder_output, encoder_output, padding_mask)
+    
+        # Add in another dropout layer
+        multihead_output2 = self.dropout2(multihead_output2, training=training)
+    
+        # Followed by another Add & Norm layer
+        addnorm_output2 = self.add_norm1(addnorm_output1, multihead_output2)
+    
+        # Followed by a fully connected layer
+        feedforward_output = self.feed_forward(addnorm_output2)
+        # Expected output shape = (batch_size, sequence_length, d_model)
+    
+        # Add in another dropout layer
+        feedforward_output = self.dropout3(feedforward_output, training=training)
+    
+        # Followed by another Add & Norm layer
+        return self.add_norm3(addnorm_output2, feedforward_output)
 

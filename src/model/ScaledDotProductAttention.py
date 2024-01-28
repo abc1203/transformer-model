@@ -1,6 +1,7 @@
 from tensorflow.keras.layers import Layer, Softmax
 from tensorflow import matmul, sqrt, cast, linalg, float32, ones, math, maximum
 import numpy as np
+from keras.backend import softmax
 
 
 class ScaledDotProductAttention(Layer):
@@ -29,23 +30,37 @@ class ScaledDotProductAttention(Layer):
         return mask_mat
 
 
-    def call(self, queries, keys, values, d_k, is_masking=False):
-        # 1. Matmul Q & K^T
-        res = matmul(queries, keys, transpose_b=True)
+    # def call(self, queries, keys, values, d_k, is_masking=False):
+    #     # 1. Matmul Q & K^T
+    #     res = matmul(queries, keys, transpose_b=True)
 
-        # 2. scaling factor of sqrt(d_k)
-        res /= sqrt(cast(d_k, float32))
+    #     # 2. scaling factor of sqrt(d_k)
+    #     res /= sqrt(cast(d_k, float32))
 
-        # 3. create a mask to be put into the softmax
-        mask_mat = self.get_mask(res, is_masking)
+    #     # 3. create a mask to be put into the softmax
+    #     mask_mat = self.get_mask(res, is_masking)
 
-        # 4. softmax
-        # shape(res) doesn't change
-        res = self.softmax(res, mask=mask_mat)
+    #     # 4. softmax
+    #     # shape(res) doesn't change
+    #     res = self.softmax(res, mask=mask_mat)
 
-        # 5. multiply by V
-        # shape(res) = (batch_size, input_seq_length, d_v)
-        res = matmul(res, values)
+    #     # 5. multiply by V
+    #     # shape(res) = (batch_size, input_seq_length, d_v)
+    #     res = matmul(res, values)
 
-        return res
+    #     return res
+
+    def call(self, queries, keys, values, d_k, mask=None):
+        # Scoring the queries against the keys after transposing the latter, and scaling
+        scores = matmul(queries, keys, transpose_b=True) / math.sqrt(cast(d_k, float32))
+ 
+        # Apply mask to the attention scores
+        if mask is not None:
+            scores += -1e9 * mask
+ 
+        # Computing the weights by a softmax operation
+        weights = softmax(scores)
+ 
+        # Computing the attention by a weighted sum of the value vectors
+        return matmul(weights, values)
 
