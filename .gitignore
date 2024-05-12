@@ -5,3 +5,5 @@ src/*/tempCodeRunnerFile.py
 checkpoints/*
 weights/*
 
+dec_tokenizer.pkl
+enc_tokenizer.pkl
