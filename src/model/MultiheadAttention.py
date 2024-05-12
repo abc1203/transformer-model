@@ -42,46 +42,42 @@ class MultiheadAttention(Layer):
         self.attention = ScaledDotProductAttention()
     
 
-    # def call(self, queries, keys, values, is_masking=False):
-    #     h, d_k, d_v, d_model = self.h, self.d_k, self.d_v, self.d_model
-    #     batch_size, q_len, k_len, v_len = shape(queries)[0], shape(queries)[1], shape(keys)[1], shape(values)[1]
+    def call(self, queries, keys, values, mask=None):
+        # linear project the queries, keys, and values
+        q = self.W_queries(queries)
+        q = reshape(q, shape=[shape(q)[0], shape(q)[1], self.heads, -1])
+        q = transpose(q, perm=[0, 2, 1, 3])
 
-    #     # linear project the queries, keys, and values
-    #     q = self.W_queries(queries)
-    #     k = self.W_keys(keys)
-    #     v = self.W_values(values)
+        k = self.W_keys(keys)
+        k = reshape(k, shape=[shape(k)[0], shape(k)[1], self.heads, -1])
+        k = transpose(k, perm=[0, 2, 1, 3])
 
-    #     # reshape tensors such that different heads are separated; (batch_size, len, (h*col)) => (batch_size, len, h, col)
-    #     q = reshape(q, shape=[batch_size, q_len, h, -1])
-    #     k = reshape(k, shape=[batch_size, k_len, h, -1])
-    #     v = reshape(v, shape=[batch_size, v_len, h, -1])
+        v = self.W_values(values)
+        v = reshape(v, shape=[shape(v)[0], shape(v)[1], self.heads, -1])
+        v = transpose(v, perm=[0, 2, 1, 3])
 
-    #     # transpose for dot product attention
-    #     q = transpose(q, perm=[0, 2, 1, 3])
-    #     k = transpose(k, perm=[0, 2, 1, 3])
-    #     v = transpose(v, perm=[0, 2, 1, 3])
+        # apply dot product attention
+        o = self.attention(q, k, v, self.d_k, mask)
 
-    #     # apply dot product attention
-    #     o = self.attention(q, k, v, d_k, is_masking)
+        # reshape the output tensor back to original
+        o = transpose(o, perm=[0, 2, 1, 3])
+        output = reshape(o, shape=[shape(o)[0], shape(o)[1], self.d_v])
 
-    #     # reshape the output tensor back to original
-    #     o = transpose(o, perm=[0, 2, 1, 3])
-    #     output = reshape(o, shape=[batch_size, shape(o)[1], d_v])
+        # linear project the output to have dimension d_model
+        output = self.W_output(output)
 
-    #     # linear project the output to have dimension d_model
-    #     output = self.W_output(output)
+        return output
 
-    #     return output
-    def reshape_tensor(self, x, heads, flag):
-        if flag:
-            # Tensor shape after reshaping and transposing: (batch_size, heads, seq_length, -1)
-            x = reshape(x, shape=(shape(x)[0], shape(x)[1], heads, -1))
-            x = transpose(x, perm=(0, 2, 1, 3))
-        else:
-            # Reverting the reshaping and transposing operations: (batch_size, seq_length, d_k)
-            x = transpose(x, perm=(0, 2, 1, 3))
-            x = reshape(x, shape=(shape(x)[0], shape(x)[1], self.d_k))
-        return x
+    # def reshape_tensor(self, x, heads, flag):
+    #     if flag:
+    #         # Tensor shape after reshaping and transposing: (batch_size, heads, seq_length, -1)
+    #         x = reshape(x, shape=(shape(x)[0], shape(x)[1], heads, -1))
+    #         x = transpose(x, perm=(0, 2, 1, 3))
+    #     else:
+    #         # Reverting the reshaping and transposing operations: (batch_size, seq_length, d_k)
+    #         x = transpose(x, perm=(0, 2, 1, 3))
+    #         x = reshape(x, shape=(shape(x)[0], shape(x)[1], self.d_k))
+    #     return x
  
     def call(self, queries, keys, values, mask=None):
         # Rearrange the queries to be able to compute all heads in parallel

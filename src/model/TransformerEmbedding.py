@@ -14,9 +14,10 @@ class TransformerEmbedding(Layer):
     
     def __init__(self, vocab_size, max_seq_len, d_model=512, **kwargs):
         super(TransformerEmbedding, self).__init__(**kwargs)
-        self.d_model = d_model
-        # embedding layer
-        self.token_embedding = Embedding(vocab_size, d_model)
+        word_embedding_matrix = self.get_positional_encoding(vocab_size, d_model)   
+        pos_embedding_matrix = self.get_positional_encoding(max_seq_len, d_model)                                          
+        self.word_embedding_layer = Embedding(input_dim=vocab_size, output_dim=d_model, weights=[word_embedding_matrix], trainable=False)
+        self.pos_embedding_layer = Embedding(input_dim=max_seq_len, output_dim=d_model, weights=[pos_embedding_matrix], trainable=False)
     
 
     def get_positional_encoding(self, max_seq_len, d_model):

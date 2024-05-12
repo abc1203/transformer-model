@@ -132,7 +132,8 @@ def train_step(encoder_input, decoder_input, decoder_output):
     train_loss(loss)
     train_accuracy(accuracy)
  
- 
+
+start_time = time()
 for epoch in range(epochs):
  
     train_loss.reset_states()
@@ -140,8 +141,6 @@ for epoch in range(epochs):
     val_loss.reset_states()
  
     print("\nStart of epoch %d" % (epoch + 1))
- 
-    start_time = time()
  
     # Iterate over the dataset batches
     for step, (train_batchX, train_batchY) in enumerate(train_dataset):

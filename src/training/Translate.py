@@ -86,3 +86,18 @@ class Translate(Module):
             print(dec_tokenizer.index_word[key])
  
         return output_str
+
+
+
+
+# TESTING
+# Sentence to translate
+sentence = ['hello']
+# Load the trained model's weights at the specified epoch
+inferencing_model.load_weights('weights/wghts5.ckpt')
+ 
+# Create a new instance of the 'Translate' class
+translator = Translate(inferencing_model)
+ 
+# Translate the input sentence
+print(translator(sentence))
