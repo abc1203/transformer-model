@@ -1,7 +1,7 @@
 To-Do:
- 3. Once working, gradually migrate code from online resource to own:
-    - Model: multihead attention (done), positionembedding (done), encoder (done), decoder (done) - performance isn't as good when transferred? (not sure)
-    - Training: PrepareData -> LoadData (done), LRScheduler -> TrainTransformer, Translate -> TestTransformer - somehow changing n_sentence doesn't adjust data size
+ 3. Once working, need to migrate code from online resource to own:
+    - Model: multihead attention, positionembedding, encoder, decoder
+    - Training: PrepareData -> LoadData, LRScheduler -> TrainTransformer, Translate -> TestTransformer - somehow changing n_sentence doesn't adjust data size
  4. Train the working model (own code) with 100,000+ data points - can't use english-german-both.pkl (too small)
     - need to clean to use another dataset
  5. Present the results & Conclude

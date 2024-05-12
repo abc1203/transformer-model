@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.insert(0, os.getcwd() + '\src\model')
+
 from pickle import load
 from tensorflow import Module
 from keras.preprocessing.sequence import pad_sequences
