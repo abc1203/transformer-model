@@ -60,10 +60,10 @@ class LoadData:
         encoder_data = encoder_data[:self.dataset_size]
         decoder_data = decoder_data[:self.dataset_size]
 
-        # add <eol> symbol to every line
+        # add <s> and <eol> symbol to every line
         for i in range(self.dataset_size):
-            encoder_data[i] = encoder_data[i] + ' <eol>'
-            decoder_data[i] = decoder_data[i] + ' <eol>'
+            encoder_data[i] = '<s> ' + encoder_data[i] + ' <eol>'
+            decoder_data[i] = '<s> ' + decoder_data[i] + ' <eol>'
 
         # shuffle the dataset
         idx_arr = np.arange(len(encoder_data))
