@@ -18,7 +18,7 @@ class Transformer(Model):
         self.transformer_encoder = TransformerEncoder(encoder_vocab_size, encoder_seq_len, N, h, d_k, d_v, d_model, d_ff, dropout_rate)
         self.transformer_decoder = TransformerDecoder(decoder_vocab_size, decoder_seq_len, N, h, d_k, d_v, d_model, d_ff, dropout_rate)
         self.linear = Dense(decoder_vocab_size)
-        # self.softmax = Softmax()
+        self.softmax = Softmax()
     
 
     def call(self, encoder_inputs, decoder_inputs, is_training = False):
