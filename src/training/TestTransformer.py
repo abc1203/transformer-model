@@ -1,5 +1,5 @@
 import tensorflow as tf
-from tensorflow import math, convert_to_tensor, data
+from tensorflow import math, convert_to_tensor, data, transpose, TensorArray, int64, newaxis
 from keras.preprocessing.sequence import pad_sequences
 from nltk.translate.bleu_score import sentence_bleu
 import numpy as np
@@ -82,21 +82,47 @@ class TestTransformer:
         print("Start testing: ")
         bleu_scores = []
 
-        for step, (data_testX, data_testY) in enumerate(self.data_test):
+        for (data_testX, data_testY) in enumerate(self.data_test):
             # decoder input is shifted right
-            encoder_inputs = data_testX[1:]
-            decoder_inputs = data_testY[:-1]
-            decoder_outputs = data_testY[1:]
+            encoder_inputs = data_testX[:]
+            ref_outputs = data_testY[:]
 
-            print("Evaluating batch...")
+            # convert <s> to tensor
+            output_start = self.tokenizer.texts_to_sequences(["<s>"])
+            output_start = convert_to_tensor(output_start[0], dtype=int64)
+    
+            # convert <eol> to tensor
+            output_end = self.tokenizer.texts_to_sequences(["<eol>"])
+            output_end = convert_to_tensor(output_end[0], dtype=int64)
 
-            pred = self.transformer_model(encoder_inputs, decoder_inputs, is_training=False)
-            print(pred)
+            # prepare output
+            decoder_output = TensorArray(dtype=int64, size=0, dynamic_size=True)
+            decoder_output = decoder_output.write(0, output_start)
+
+            # generate next word
+            for i in range(self.decoder_seq_len):
+                prediction = self.transformer(encoder_inputs, transpose(decoder_output.stack()), training=False)
+    
+                prediction = prediction[:, -1, :]
+    
+                # select prediction
+                predicted_id = tf.argmax(prediction, axis=-1)
+                predicted_id = predicted_id[0][newaxis]
+    
+                # write prediction to output
+                decoder_output = decoder_output.write(i + 1, predicted_id)
+    
+                # break of <eol> outputted
+                if predicted_id == output_end:
+                    break
+    
+            pred = transpose(decoder_output.stack())[0].numpy()
+
+            print("Evaluating...")
 
             # convert pred & decoder_outputs to text
-            pred_seq = self.convert_to_seq(pred, decoder_outputs)
-            pred = self.convert_to_text(self.tokenizer, pred_seq.numpy())
-            target = self.convert_to_text(self.tokenizer, decoder_outputs.numpy())
+            pred = self.convert_to_text(self.tokenizer, pred.numpy())
+            target = self.convert_to_text(self.tokenizer, ref_outputs.numpy())
 
             # evalute BLEU score
             print("Calculating BLEU score...")
@@ -105,7 +131,6 @@ class TestTransformer:
             bleu_scores.append(bleu_score)
             print(bleu_scores)
 
-            print("Batch done")
             print("=======================================================================================================")
         
         print("Avg BLEU score: ", math.reduce_mean(bleu_scores))
