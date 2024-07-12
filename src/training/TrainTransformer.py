@@ -5,7 +5,7 @@ sys.path.insert(0, os.getcwd() + '\src\model')
 import tensorflow as tf
 from tensorflow import data, math, cast, float32, one_hot, shape, convert_to_tensor
 from tensorflow.keras.losses import SparseCategoricalCrossentropy
-from Transformer import Transformer
+from model import Transformer
 from LoadData import LoadData
 from AdamOptimizer import AdamOptimizer
 
@@ -125,6 +125,6 @@ class TrainTransformer:
         print("=======================================================================================================")
         
 
-
-train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', dataset_size=64)
-train_transformer()
+if __name__ == "__main__":
+    train_transformer = TrainTransformer('english_updated.pkl', 'german_updated.pkl', dataset_size=150000)
+    train_transformer()

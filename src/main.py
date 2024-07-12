@@ -18,7 +18,7 @@ if __name__ == "__main__":
     model_dir = os.getcwd() + '\saved_model\\transformer_model'
 
     # get test data from 2014 wmt english-german dataset
-    data = LoadData(dataset_size=10000)
+    data = LoadData(dataset_size=2000)
     encoder_test, encoder_vocab_size, encoder_seq_len, decoder_test, decoder_vocab_size, decoder_seq_len = data('english_updated.pkl', 'german_updated.pkl', is_training=False)
     tokenizer = data.get_tokenizer()
 
