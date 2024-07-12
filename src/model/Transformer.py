@@ -32,7 +32,7 @@ class Transformer(Model):
         res = self.linear(decoder_outputs)
 
         # apply softmax
-        # res = self.softmax(res)
+        res = self.softmax(res)
 
         return res
 
