@@ -30,20 +30,6 @@ class TestTransformer:
         print("Test Initialized")
         print("=======================================================================================================")
     
-
-    # convert output probabilites from model to sequences
-    # (batch_size, seq_len, vocab_size) => (batch_size, seq_len)
-    def convert_to_seq(self, transformer_output, target):
-        output_seq = []
-
-        for i in range(transformer_output.shape[0]):
-            # replace vocab tensor with index of highest probability + padding
-            sentence_seq = [tf.get_static_value(math.argmax(transformer_output[i][j])) if target[i][j]!=0 else 0 for j in range(transformer_output.shape[1])]
-
-            output_seq.append(sentence_seq)
-
-        return convert_to_tensor(output_seq)
-    
     
     # convert sequences into text
     # sequences have shape (batch_size, seq_len)
