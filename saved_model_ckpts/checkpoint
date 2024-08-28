@@ -1,3 +1,4 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:c6fe65c575301a9579914ff843a99cb2145e2c2bac5e379be04d87e3589f1ba0
-size 166
+model_checkpoint_path: "ckpt-5"
+all_model_checkpoint_paths: "ckpt-5"
+all_model_checkpoint_timestamps: 1691371458.9025507
+last_preserved_timestamp: 1691306290.0503428
